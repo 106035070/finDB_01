@@ -1,0 +1,25 @@
+---
+title: "tw50_107Q4"
+author: '106035070'
+date: "2019年3月18日"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+library(readr)
+tw50_2017<-read_csv("2017Q4_code.csv", locale = locale(encoding='big5'))
+head(tw50_2017)
+```
+
+```{r}
+library(readr)
+tw50<-read_csv("tw50.csv", locale = locale(encoding='big5'))
+head(tw50)
+```
+
+
+
