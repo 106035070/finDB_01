@@ -4,7 +4,6 @@
 #另外，也可使用 data 參數指定資料來源的 data frame，這種方式會讓指令比較簡潔。
 
 
-
 library(ggplot2)
 head(diamonds)
 set.seed(5)
@@ -13,6 +12,7 @@ qplot(diamonds$carat, diamonds$price)
 qplot(carat, price, data = diamonds)
 qplot(log(carat), log(price), data = diamonds)
 qplot(carat, x * y * z, data = diamonds)
+
 
 
 #圖形樣式
@@ -24,7 +24,6 @@ qplot(carat, price, data = diamonds.subset, color = color)
 qplot(carat, price, data = diamonds.subset, shape = cut)
 qplot(carat, price, data = diamonds, alpha = I(1/10))
 qplot(carat, price, data = diamonds, alpha = I(1/100))
-
 
 
 # point：使用點的方式呈現資料，也是 qplot 在繪製二維資料時預設的方式。
@@ -42,7 +41,6 @@ qplot(carat, price, data = diamonds,
 
 #當一組資料同時含有一個類別型的變數以及一個或多個連續型的變數時，資料分析者通常都會想比較各類別中各連續型變數的分佈狀況，而最常用的圖形就是箱形圖。箱形圖僅帶有 five numbers 的資訊，若想要看到更細部的資訊，可以使用 jitter 的方式繪製資料點，它可以將每一個資料點都畫出來。在資料量太多時，可使用透明度的技巧。以 jitter 的方式繪圖可以顯示資料分佈的細部資訊，彌補箱形圖的不足。
 #以 jitter 繪製資料點時，可同時配合散佈圖中的各種參數來調整圖形，例如：size、color 與 shape，而箱形圖也可以使用 color、fill 與 size 來調整顏色與線條粗細。
-
 # boxplot：以箱形圖呈現資料分佈情形。
 
 
@@ -54,29 +52,6 @@ qplot(color, price / carat, data = diamonds, geom = "jitter",
       alpha = I(1 / 50))
 qplot(color, price / carat, data = diamonds, geom = "jitter",
       alpha = I(1 / 200))
-# 以資料點的形狀區分 cut 變數
-qplot(color, price / carat, data = diamonds, geom = "jitter",
-      alpha = I(1 / 5), shape = cut)
-
-# 以資料點的顏色區分 color 變數
-qplot(color, price / carat, data = diamonds, geom = "jitter",
-      alpha = I(1 / 5), color = color)
-
-# 以資料點的顏色區分 cut 變數
-qplot(color, price / carat, data = diamonds, geom = "jitter",
-      alpha = I(1 / 5), color = cut)
-
-# 以箱形圖的外框顏色區分 color 變數
-qplot(color, price / carat, data = diamonds, geom = "boxplot",
-      color = color)
-
-# 以箱形圖的內部顏色區分 color 變數
-qplot(color, price / carat, data = diamonds, geom = "boxplot",
-      fill = color)
-
-# 調整箱形圖的外框粗細
-qplot(color, price / carat, data = diamonds, geom = "boxplot",
-      size = I(2))
 
 
 
@@ -109,6 +84,7 @@ qplot(carat, ..density.., data = diamonds,
 
 # bar：長條圖，適用於離散型的類別資料。
 
+
 qplot(color, data = diamonds, geom = "bar")
 qplot(color, data = diamonds, geom = "bar", weight = carat) +
   ylab("carat")
@@ -134,17 +110,18 @@ qplot(unemploy / pop, uempmed, data = economics,
 
 #繪圖面（Facet）
 
+
 qplot(carat, data = diamonds, facets = color ~ cut,
       geom = "histogram", binwidth = 0.1, xlim = c(0, 3))
 qplot(carat, data = diamonds, facets = color ~ .,
       geom = "histogram", binwidth = 0.1, xlim = c(0, 3))
 
 
-
 # xlim、ylim：設定 x 軸與 y 軸的繪圖範圍。
 # log：指定需要對數轉換的座標軸，例如 log = "x" 就是將 x 軸經過對數轉換，而 log = "xy" 則是讓 x 與 y 軸都經過對數轉換。
 # main：指定圖形的標題，可指定為一般的字串或是以 expression 來表示的數學公式。
 # xlab、ylab：指定 x 軸與 y 軸的名稱，其與 main 一樣可以指定為字串或數學公式。
+
 
 qplot(
   carat, price, data = diamonds.subset,
@@ -159,34 +136,6 @@ qplot(
   xlim = c(.2,1)
 )
 qplot(carat, price, data = diamonds.subset, log = "xy")
-
-
-
-# 產生繪圖用的因子變數
-mtcars$gear <- factor(mtcars$gear,levels=c(3, 4, 5),
-                      labels=c("3gears", "4gears", "5gears"))
-mtcars$am <- factor(mtcars$am,levels=c(0, 1),
-                    labels=c("Automatic", "Manual"))
-mtcars$cyl <- factor(mtcars$cyl,levels=c(4, 6, 8),
-                     labels=c("4cyl", "6cyl", "8cyl"))
-
-# 以 gear 分組畫出 mpg 密度函數圖
-qplot(mpg, data = mtcars, geom = "density",
-      fill = gear, alpha = I(.5),
-      main="Distribution of Gas Milage",
-      xlab="Miles Per Gallon",
-      ylab="Density")
-# 將資料以 gear 與 cylinder 分組，
-# 畫出 mpg 與 hp 的散佈圖，
-# 並且以資料點的顏色與形狀標示 am
-qplot(hp, mpg, data = mtcars, shape = am, color = am,
-      facets = gear~cyl, size = I(3),
-      xlab = "Horsepower", ylab = "Miles per Gallon")
-# 畫出箱形圖，
-# 並且在上面用 jitter 資料點畫出實際資料的位置
-qplot(gear, mpg, data = mtcars, geom = c("boxplot", "jitter"),
-      fill = gear, main = "Mileage by Gear Number",
-      xlab = "", ylab = "Miles per Gallon")
 
 
 
@@ -240,7 +189,7 @@ qplot(bodywt, brainwt, data = msleep, log = "xy") + bestfit
 
 
 
-#資料來源 有錯
+#資料來源
 
 #ggplot 的資料來源一定要是 data frame，它不像 R 的其他繪圖系統一樣同時可以接受一般的向量，而這樣嚴格的設計也是有它的優點，除了讓程式碼的語法統一之外，也可以方便置換資料，直接以既有的圖層組合產生新的圖形。若要改變一個 ggplot 繪圖物件的資料來源，可以使用 %+% 運算子，使用 %+% 運算子抽換資料來源的 data frame。ggplot 在指定資料來源之後，會將資料複製一份並儲存在繪圖物件當中，後續若資料更動時，ggplot 的繪圖並不會受影響，另外由於這樣的特性，我們可以將 ggplot 繪圖物件儲存至硬碟中，之後重新載入與繪圖時也不需要載入其餘任何資料。
 
@@ -253,7 +202,6 @@ my.plot5 %+% mtcars.trans
 
 
 #美學對應 & 繪圖與圖層
-#錯誤
 
 
 aes(x = weight, y = height, color = age)
@@ -277,27 +225,6 @@ aes(y = NULL)
 my.plot8 <- ggplot(mtcars, aes(mpg, wt))
 my.plot8 + geom_point(colour = "blue")
 my.plot8 + geom_point(aes(colour = "blue"))
-
-
-
-#群組（Grouping）  少2張圖
-
-
-my.plot9 <- ggplot(Oxboys, aes(age, height)) +
-  geom_line()
-my.plot9 <- ggplot(Oxboys, aes(age, height, group = Subject)) +
-  geom_line()
-my.plot9 + geom_smooth(method="lm", se = F)
-my.plot9 + geom_smooth(aes(group = 1), method="lm", size = 2, se = F)
-
-
-
-
-#少1張圖
-
-
-boysbox <- ggplot(Oxboys, aes(Occasion, height)) + geom_boxplot()
-boysbox + geom_line(aes(group = Subject), color = "blue")
 
 
 
@@ -357,21 +284,4 @@ my.plot + stat_bin(
   aes(size = ..density..), binwidth = 0.1,
   geom = "point", position="identity"
 )
-
-
-
-#不同的資料來源 false
-
-
-library(nlme)
-model <- lme(height ~ age, data = Oxboys, random = ~ 1 + age | Subject)
-age_grid <- seq(-1, 1, length = 10)
-subjects <- unique(Oxboys$Subject)
-preds <- expand.grid(age = age_grid, Subject = subjects)
-preds$height <- predict(model, preds)
-my.plot <- ggplot(Oxboys, aes(age, height, group = Subject)) + geom_line()
-my.plot + geom_line(data = preds, colour = "#3366FF", size= 0.4)
-Oxboys$fitted <- predict(model)
-Oxboys$resid <- with(Oxboys, fitted - height)
-my.plot %+% Oxboys + aes(y = resid) + geom_smooth(aes(group=1))
 
