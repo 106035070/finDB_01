@@ -1,0 +1,18 @@
+---
+title: "hw7"
+author: '106035070'
+date: "2019年4月1日"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+etf4.all<-readRDS("etf4_xts_all")
+head(etf4.all)
+etf4.all.1 = etf4.all[complete.cases(etf4.all),]
+head(etf4.all.1)
+```
+
