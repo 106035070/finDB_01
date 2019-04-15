@@ -1,19 +1,35 @@
-rm(list=ls())
+---
+title: "Midterm exam"
+author: '106035070'
+date: "2019年4月15日"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
 
 #第一題
+```{r}
+rm(list=ls())
 
 ifelse(!require(quantmod), install.packages('quantmod'), library(quantmod))
 tw20_adj_close<-read.csv("2018Q4_20.csv")
 head(tw20_adj_close, 20)
+```
+
 
 #第二題
-
+```{r}
 ifelse(!require(readr), install.packages('readr'), library(readr))
 tw20.txt<-read.table("tw20.txt", header = T)
 head(tw20.txt, 50)
+```
+
 
 #第三題
-
+```{r}
 ifelse(!require(reshape2), install.packages('reshape2'), library(reshape2))
 colnames(tw20.txt)<-c("id","", "date", "price")
 tw20.xts = dcast(tw20.txt, date~id)
@@ -23,20 +39,25 @@ tw20.xts$date<-as.Date(as.character(tw20.xts$date), "%Y%m%d")
 library(xts)
 tw20.xts.1<-xts(tw20.xts[,-1], order.by = tw20.xts$date)
 saveRDS(tw20.xts.1, "tw20_xts_all")
+```
+
 
 #第四題
-
-ifelse(!require(PerformanceAnalytics), install.packages('performanceAnalytics'), library(performanceAnalytics))
-ifelse(!require(magrittr), install.packages('magrittr'), library(magrittr))
+```{r}
+ifelse(!require(PerformanceAnalytics),install.packages('PerformanceAnalytics'), library(PerformanceAnalytics))
+ifelse(!require(magrittr), install.packages('magrittr'),library(magrittr))
 tw20.day.ret <-Return.calculate(tw20.xts.1, method = "log")
 head(tw20.day.ret)
 
 ifelse(!require(quantmod),install.packages('quantmod'), library(quantmod))
 tw20.mon.ret <- to.monthly(tw20.xts.1, indexAt = "lastof", OHLC=FALSE)
 head(tw20.mon.ret)
+```
+
 
 #第六題
 
+```{r}
 con = gzcon(url('http://www.systematicportfolio.com/sit.gz', 'rb'))
 source(con)
 close(con)
@@ -47,8 +68,10 @@ tw20.all<-readRDS("C:/gittest/01/20190415/tw20_xts_all")
 head(tw20.all)
 tw20.all.1<-tw20.all[complete.cases(tw20.all),]
 head(tw20.all.1)
+```
 
-# 1101
+#1101
+```{r}
 library(xts)
 data1<-new.env()
 data1$prices<-tw20.all.1$'1101'
@@ -71,18 +94,24 @@ buy.hold.1101 <-bt.run(data1)
 sma1101<-SMA(prices, 90)
 head(sma1101, 91)
 data1$weight[] <- iif(prices >= sma1101, 1, 0)
-sma90.1101 <- bt.run(data1, trade.summary=T)  
+sma90.1101 <- bt.run(data1, trade.summary=T) 
 
 data1$weight[] <- iif(prices >= sma1101, 1, -1)
 sma90.1101.short <- bt.run(data1, trade.summary=T)
+```
 
+
+```{r}
 models<-list("SMA1101"= sma90.1101, 
              "SMA1101_short" = sma90.1101.short, 
              "BH 1101" = buy.hold.1101)
 strategy.performance.snapshoot(models, T)
 strategy.performance.snapshoot(models, control=list(comparison=T), sort.performance=T)
 plotbt.strategy.sidebyside(models, return.table=T)
+```
 
+
+```{r}
 ifelse(!require(ggplot2), install.packages('ggplot2'), library(ggplot2))
 all.1101<-merge.xts(sma90.1101$equity,
                     sma90.1101.short$equity, 
@@ -99,9 +128,11 @@ p = ggplot(all.1101.long, aes(x = Index, y = Value)) +
   xlab("year") + ylab("cumulative returns")+
   ggtitle(title)
 p
+```
 
 
 #1216
+```{r}
 library(xts)
 data1<-new.env()
 data1$prices<-tw20.all.1$'1216'
@@ -128,14 +159,19 @@ sma90.1216 <- bt.run(data1, trade.summary=T)
 
 data1$weight[] <- iif(prices >= sma1216, 1, -1)
 sma90.1216.short <- bt.run(data1, trade.summary=T)
+```
 
+```{r}
 models_1<-list("SMA1216"= sma90.1216, 
              "SMA1216_short" = sma90.1216.short, 
              "BH 1216" = buy.hold.1216)
 strategy.performance.snapshoot(models_1, T)
 strategy.performance.snapshoot(models_1, control=list(comparison=T), sort.performance=T)
 plotbt.strategy.sidebyside(models_1, return.table=T)
+```
 
+
+```{r}
 ifelse(!require(ggplot2), install.packages('ggplot2'), library(ggplot2))
 all.1216<-merge.xts(sma90.1216$equity,
                     sma90.1216.short$equity, 
@@ -152,9 +188,11 @@ p = ggplot(all.1216.long, aes(x = Index, y = Value)) +
   xlab("year") + ylab("cumulative returns")+
   ggtitle(title)
 p
+```
 
 
 #1301
+```{r}
 library(xts)
 data1<-new.env()
 data1$prices<-tw20.all.1$'1301'
@@ -181,14 +219,20 @@ sma90.1301 <- bt.run(data1, trade.summary=T)
 
 data1$weight[] <- iif(prices >= sma1301, 1, -1)
 sma90.1301.short <- bt.run(data1, trade.summary=T)
+```
 
+
+```{r}
 models_2<-list("SMA1301"= sma90.1301, 
              "SMA1301_short" = sma90.1301.short, 
              "BH 1301" = buy.hold.1301)
 strategy.performance.snapshoot(models_2, T)
 strategy.performance.snapshoot(models_2, control=list(comparison=T), sort.performance=T)
 plotbt.strategy.sidebyside(models_2, return.table=T)
+```
 
+
+```{r}
 ifelse(!require(ggplot2), install.packages('ggplot2'), library(ggplot2))
 all.1301<-merge.xts(sma90.1301$equity,
                     sma90.1301.short$equity, 
@@ -205,3 +249,8 @@ p = ggplot(all.1301.long, aes(x = Index, y = Value)) +
   xlab("year") + ylab("cumulative returns")+
   ggtitle(title)
 p
+```
+
+
+
+
